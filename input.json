@@ -1,5 +1,5 @@
 {
-    "rqcfilter.input_files": ["/global/cfs/cdirs/m3408/aim2/dev/vli-testing/ReadsQC/test/incorrect_pairs_R1.fastq.gz", "/global/cfs/cdirs/m3408/aim2/dev/vli-testing/ReadsQC/test/incorrect_pairs_R2.fastq.gz"],
+    "rqcfilter.input_files": ["test/incorrect_pairs_R1.fastq.gz", "test/incorrect_pairs_R2.fastq.gz"],
     "rqcfilter.proj":"nmdc:xxxxxxx",
     "rqcfilter.shortRead": true
 }

@@ -4,7 +4,8 @@ version 1.0
 workflow ShortReadsQC {
     input{
         String  container="bfoster1/img-omics:0.1.9"
-        String  bbtools_container="microbiomedata/bbtools:38.96"
+#        String  bbtools_container="microbiomedata/bbtools:38.96"
+        String  bbtools_container="bbtools_latest.sif"
         String  workflow_container = "microbiomedata/workflowmeta:1.1.1"
         String  proj
         String prefix=sub(proj, ":", "_")

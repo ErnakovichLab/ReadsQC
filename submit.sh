@@ -47,7 +47,7 @@
 ## Normal Slurm options
 ## SBATCH -p shared
 #SBATCH --job-name="test_cromwell"
-#SBATCH --output=$HOME/rqc_filter/log/rqc_filter_%j.log
+#SBATCH --output=rqc_filter_%j.log
 #SBATCH --mail-type=END,FAIL
 ##SBATCH --mail-user=heh1030@unh.edu
 ##SBATCH --job-name=rqc_%j
@@ -58,13 +58,15 @@
 ## module.  Refer to http://premise.sr.unh.edu for more info.
 module purge
 module load anaconda/colsa
-conda activate cromwell
+conda activate cromwell # we mostly just use this for the java. We'll invoke the jar file 87 directly
 
 ## Instruct your program to make use of the number of desired threads.
 ## As your job will be allocated an entire node, this should normally
 ## be 24.
-cromwell --help
-cromwell run cromwell_test.wdl
+#cromwell --help
+#cromwell run cromwell_test.wdl
 
 
-java -Dconfig.file=shifter.conf -jar /global/common/software/m3408/cromwell-45.jar run -m metadata_out.json -i input.json rqcfilter.wdl
+#java -Dconfig.file=shifter.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m metadata_out.json -i input.json rqcfilter.wdl
+java -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m metadata_out.json -i input.json rqcfilter.wdl
+

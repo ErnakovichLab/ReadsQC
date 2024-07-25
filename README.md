@@ -1,7 +1,7 @@
 # The Data Preprocessing workflow
 
 ## Summary
-
+NOTE: This will be modified for the Ernakovich HPC setup
 This workflow is a replicate of the [QA protocol](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/bb-tools-user-guide/data-preprocessing/) implemented at JGI for Illumina reads and use the program “rqcfilter2” from BBTools(38:96) which implements them as a pipeline. 
 
 ## Required Database

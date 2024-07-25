@@ -9,7 +9,7 @@ workflow nmdc_rqcfilter {
     String  prefix=sub(proj, ":", "_")
     String  input_fastq1
     String  input_fastq2
-    String  database="/refdata/"
+    String  database="/mnt/home/hcgs/shared/databases/readsqc/refdata"
     }
 
     call stage {

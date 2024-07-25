@@ -60,6 +60,7 @@ module purge
 module load anaconda/colsa
 conda activate cromwell # we mostly just use this for the java. We'll invoke the jar file 87 directly
 
+module load singularity
 ## Instruct your program to make use of the number of desired threads.
 ## As your job will be allocated an entire node, this should normally
 ## be 24.
@@ -68,5 +69,5 @@ conda activate cromwell # we mostly just use this for the java. We'll invoke the
 
 
 #java -Dconfig.file=shifter.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m metadata_out.json -i input.json rqcfilter.wdl
-java -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m metadata_out.json -i input.json rqcfilter.wdl
+java -Dconfig.file=shifter.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m metadata_out.json -i input.json rqcfilter.wdl
 

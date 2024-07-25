@@ -1,2 +1,14 @@
 other
 docs/_build
+# Location of the containers, and symlinks to them
+SingularityImages*
+microbiomedata
+bfoster1
+# notes for hannah's troubleshooting
+notes_for_hannah.txt
+# Outputs from pipeline
+cromwell-workflow-logs
+cromwell-executions
+metadata_out.json
+# slurm logs
+rqc_filter_*.log

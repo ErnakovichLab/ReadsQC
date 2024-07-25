@@ -4,13 +4,13 @@ version 1.0
 workflow ShortReadsQC {
     input{
         String  container="bfoster1/img-omics:0.1.9"
-#        String  bbtools_container="microbiomedata/bbtools:38.96"
-        String  bbtools_container="bbtools_latest.sif"
+        String  bbtools_container="microbiomedata/bbtools:38.96"
+#        String  bbtools_container="bbtools_latest.sif"
         String  workflow_container = "microbiomedata/workflowmeta:1.1.1"
         String  proj
         String prefix=sub(proj, ":", "_")
         Array[String] input_files
-        String  database="/refdata/"
+        String  database="/mnt/home/hcgs/shared/databases/readsqc/refdata"
     }
 
     if (length(input_files) > 1) {
@@ -114,6 +114,8 @@ task stage_interleave {
            ln -s ~{input_fastq2} ~{target_reads_2} || cp ~{input_fastq2} ~{target_reads_2}
        fi
 
+       #echo "TESTING"
+       #zcat ~{target_reads_1} | head
        reformat.sh -Xmx~{memory} in1=~{target_reads_1} in2=~{target_reads_2} out=~{output_interleaved}
        # Capture the start time
        date --iso-8601=seconds > start.txt
@@ -160,6 +162,7 @@ task rqcfilter {
         docker: container
         memory: "70 GB"
         cpu:  16
+        dbdir: database
     }
 
      command<<<

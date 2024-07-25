@@ -1,5 +1,5 @@
 {
-    "rqcfilter.input_files": ["test/incorrect_pairs_R1.fastq.gz", "test/incorrect_pairs_R2.fastq.gz"],
-    "rqcfilter.proj":"nmdc:xxxxxxx",
+    "rqcfilter.input_files": ["/mnt/home/ernakovich/heh1030/Software/ReadsQC/test/Ecoli_10x.1.fastq.gz", "/mnt/home/ernakovich/heh1030/Software/ReadsQC/test/Ecoli_10x.2.fastq.gz"],
+    "rqcfilter.proj":"nmdc:test_method",
     "rqcfilter.shortRead": true
 }

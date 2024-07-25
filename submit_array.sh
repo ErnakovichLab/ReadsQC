@@ -46,11 +46,16 @@
 
 ## Normal Slurm options
 ## SBATCH -p shared
-#SBATCH --job-name="test_cromwell"
-#SBATCH --output=rqc_filter_%j.log
-#SBATCH --mail-type=END,FAIL
+##SBATCH --job-name="test_cromwell"
+# job name reflects array
+#SBATCH --output=rqc_filter_%A_%a.log
+##SBATCH --mail-type=END,FAIL
 ##SBATCH --mail-user=heh1030@unh.edu
-##SBATCH --job-name=rqc_%j
+#SBATCH --job-name=rqc_filter
+
+
+# Array setup
+#SBATCH --array=0-2:1
 
 
 ## Load the appropriate modules first.  Linuxbrew/colsa contains most
@@ -67,7 +72,17 @@ module load singularity
 #cromwell --help
 #cromwell run cromwell_test.wdl
 
+# Generate json file list:
+ls  /mnt/home/ernakovich/heh1030/Software/json_inputs/*.json > json_list
+readarray -t files <json_list
 
-#java -Dconfig.file=shifter.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m metadata_out.json -i input.json rqcfilter.wdl
-java -Dconfig.file=singularity.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m metadata_out.json -i input.json rqcfilter.wdl
+# Get current file
+current_file=${files[$SLURM_ARRAY_TASK_ID-1]}
+
+sample_name=$(basename $current_file)
+outdir=$(dirname $current_file)/output
+# echo $outdir
+mkdir -p $outdir
+
+java -Dconfig.file=singularity.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m ${outdir}/${sample_name}_metadata_out.json -i ${current_file} rqcfilter.wdl
 

@@ -29,7 +29,7 @@ unzip main.zip
 If there are ever updates to the tutorial on github, you can update the contents of this folder by downloading the new version from the same link as above.
 
 #### Install Cromwell
-Cromwell is a java based program and requires java 11 or greater to run. The default java version on premise is below this. Therefore we will install java and Cromwell in an anaconda environment which we will invoke prior to running the pipeline. 
+Cromwell is a java based program and requires java 11 or greater to run. Cromwell is the software that does the heavy lifting for us in interpreting the WDL language and orchestrating the workflow. The default java version on premise is below what Cromwell requires. Therefore we will install java and Cromwell in an anaconda environment which we will invoke prior to running the pipeline. 
 
 ```bash
 # load anaconda on the premise HPC
@@ -49,13 +49,22 @@ wget https://github.com/broadinstitute/cromwell/releases/download/87/cromwell-87
 
 (Note currently we don't actually run cromwell from this environment directly, we mostly just rely on it for the java. This is because I have no idea where the cromwell jar file is in the depths of the conda environment...)
 
-## Installing singularity images on premise
+#### Installing singularity images on premise
 One of the reasons this workflow is so portable is that it relies on the use of containers for its software needs. Often one of the most challenging parts of implementing a repeatable bioinformatics workflow is installing the software. Too often, software from one step conflicts with software from a downstream step, or the workflow works on one operating system but not all. In the past these difficulties could be prohibitive to replication of a workflow, the use of containers helps solve that problem. Containers essentially spoof a program into thinking it is running on the kind computer/operating system they need to run with all the dependencies the need to run correctly.
 
 One of the most popular kinds of container software is Docker. All of the necessary programs to run this workflow have been saved as Docker containers by the folks at NMDC. However most HPC systems (like premise) don't use Docker since it requries each user to have administrator level access to use effectively. Instead, many HPC systems prefer to use [Singularity](https://docs.sylabs.io/guides/3.0/user-guide/quick_start.html) which is safter to use and can seamlessly import Docker containers.
 
-If you need to install the images in your own directory
+For Ernakovich lab users, I have installed the singularity containers in our shared directory. Therefore, all you need to do is create "symlinks" (symbolic links - this is kind of analogous to a shortcut on your desktop machine) that link to the Singularity containers in `/mnt/home/ernakocvich/shared/SingularityImages` 
 
+Otherwise you can create a symlink to the singularity directory; note that the image names need to include the numbers and colons so that they match the names of the containers in the .wdl files exactly:
+
+```bash
+cd ReadsQC
+ln -s /mnt/home/ernakovich/shared/software/SingularityImages microbiomedata
+ln -s /mnt/home/ernakovich/shared/software/SingularityImages bfoster1
+```
+
+If you are not on premise or in the Ernakovich lab, you'll need to install the images in your own directory
 ```bash
 module load singularity
 cd ReadsQC
@@ -64,16 +73,13 @@ cd SingularityImages
 singularity pull img-omics docker://bfoster1/img-omics:0.1.1
 singularity pull pbmarkdup docker://microbiomedata/pbmarkdup:1.0
 singularity pull bbtools docker://microbiomedata/bbtools
-```
+singularity pull workflowmeta docker://microbiomedata/workflowmeta:1.1.1
 
-Otherwise you can create a symlink to the singularity directory; note that the image names need to include the numbers and colons so that they match the names of the containers in the .wdl files exactly
-```
-cd ReadsQC
-ln -s <full/path/to/directory/containing/bbtools/and/pbmarkdup/images> microbiomedata
-ln -s <full/path/to/directory/containing/img-omics/images> bfoster1
-
-
-need to insert directions here
+# Change the names to match wdl calls
+mv bbtools bbtools:38.96
+mv img-omics img-omics:0.1.9
+mv pbmarkdup pbmarkdup:1.0
+mv workflowmeta workflowmeta:1.1.1
 ```
 
 #### Other less common setup steps

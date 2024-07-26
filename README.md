@@ -9,6 +9,8 @@ This workflow is a replicate of the [QA protocol](https://jgi.doe.gov/data-and-t
 
 We suggest opening the tutorial online to understand more about each step. The original pipeline on which this tutorial is based can be found here: [https://nmdc-edge.org/tutorial](https://nmdc-edge.org/tutorial)
 
+If your data is small enough, consider using the NMDC Edge web interface it's very nice and a good place for beginners to get their feet wet: [https://nmdc-edge.org/home](https://nmdc-edge.org/home)
+
 ## Getting started
 The goal of the workflow in this repository is to take sequencing data and clean it in preparation for downstream processes. Specifically we'll be using it as the first step in our laboratory's 'Omics workflow system.
 

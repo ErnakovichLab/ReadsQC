@@ -5,12 +5,12 @@ workflow ShortReadsQC {
     input{
         String  container="bfoster1/img-omics:0.1.9"
         String  bbtools_container="microbiomedata/bbtools:38.96"
-#        String  bbtools_container="bbtools_latest.sif"
         String  workflow_container = "microbiomedata/workflowmeta:1.1.1"
         String  proj
-        String prefix=sub(proj, ":", "_")
+        String  prefix=sub(proj, ":", "_")
         Array[String] input_files
         String  database="/mnt/home/hcgs/shared/databases/readsqc/refdata"
+        String  datadir=sub(input_files[1], basename(input_files[1]), "")
     }
 
     if (length(input_files) > 1) {
@@ -19,14 +19,16 @@ workflow ShortReadsQC {
             container=bbtools_container,
             memory="10G",
             input_fastq1=input_files[0],
-            input_fastq2=input_files[1]
+            input_fastq2=input_files[1],
+            datadir=datadir
         }
     }
     if (length(input_files) == 1) {
         call stage_single {
         input:
             container=container,
-            input_file = input_files[0]
+            input_file = input_files[0],
+            datadir=datadir
         }
     }
 
@@ -37,7 +39,8 @@ workflow ShortReadsQC {
             threads = "16",
             database = database,
             memory = "60G",
-            container = bbtools_container
+            container = bbtools_container,
+            datadir=datadir
     }
     call make_info_file {
         input: info_file = qc.info_file,
@@ -66,6 +69,7 @@ task stage_single {
         String container
         String target="raw.fastq.gz"
         String input_file
+        String? datadir
     }
    command <<<
 
@@ -89,6 +93,7 @@ task stage_single {
      cpu:  2
      maxRetries: 1
      docker: container
+     data_dir: datadir
    }
 }
 
@@ -102,6 +107,7 @@ task stage_interleave {
     String output_interleaved="raw_interleaved.fastq.gz"
     String input_fastq1
     String input_fastq2
+    String datadir
    }
 
    command <<<
@@ -134,6 +140,8 @@ task stage_interleave {
      cpu:  2
      maxRetries: 1
      docker: container
+     data_dir: datadir
+
    }
 }
 
@@ -142,6 +150,7 @@ task rqcfilter {
     input{
         File? input_fastq
         String container
+        String datadir
         String database
         String rqcfilterdata = database + "/RQCFilterData"
         Boolean chastityfilter_flag=true
@@ -163,6 +172,7 @@ task rqcfilter {
         memory: "70 GB"
         cpu:  16
         dbdir: database
+        data_dir: datadir
     }
 
      command<<<

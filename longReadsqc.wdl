@@ -14,6 +14,8 @@ workflow LongReadsQC{
     File?   reference
     String  pbmarkdup_container="microbiomedata/pbmarkdup:1.0"
     String  bbtools_container="microbiomedata/bbtools:39.01"
+    # getting data director for container binding (untested in long reads)
+    String  datadir=sub(file, basename(file), "")
     # String  outdir 
     # String  prefix = basename(file)
   }
@@ -26,6 +28,7 @@ workflow LongReadsQC{
     log_level = log_level,
     rmdup = rmdup,
     container = pbmarkdup_container,
+    datadir = datadir,
     overwrite = overwrite
   }
 
@@ -33,7 +36,8 @@ workflow LongReadsQC{
     input:
     in_file = pbmarkdup.out_fastq,
     prefix = prefix,
-    container = bbtools_container
+    container = bbtools_container,
+    datadir = datadir
     # outdir = outdir
   }
 
@@ -42,6 +46,7 @@ workflow LongReadsQC{
     in_file = icecreamfilter.output_good,
     prefix = prefix,
     container = bbtools_container,
+    datadir = datadir,
     # outdir = outdir,
     reference = reference
   }
@@ -51,6 +56,7 @@ workflow LongReadsQC{
     in_file = bbdukEnds.out_fastq,
     prefix = prefix,
     container = bbtools_container,
+    datadir = datadir,
     # outdir = outdir,
     reference = reference
   }
@@ -95,6 +101,7 @@ task pbmarkdup{
     Boolean? rmdup
     Boolean? overwrite
     String   container
+    String   datadir
     # String   outdir
     # String   out_file = outdir + "/pbmarkdup.fq"
   }
@@ -122,6 +129,7 @@ task pbmarkdup{
 
   runtime{
      docker: container
+     data_dir: datadir
      continueOnReturnCode: true
   }
 }
@@ -134,6 +142,7 @@ task icecreamfilter{
     String out_bad = prefix + ".icecreamfilter.out_bad.out.gz"
     String out_good = prefix + ".icecreamfilter.out_good.out.gz"
     String container
+    String datadir
     # String outdir
     # String out_bad = outdir + "/" + prefix + ".icecreamfilter.out_bad.out.gz"
     # String out_good = outdir + "/" + prefix + ".icecreamfilter.out_good.out.gz"
@@ -164,6 +173,7 @@ task icecreamfilter{
 
   runtime{
      docker: container
+     data_dir: datadir
      continueOnReturnCode: true
   }
 }
@@ -175,6 +185,7 @@ task bbdukEnds{
     String prefix
     String out_file = prefix + ".bbdukEnds.out.fq.gz"
     String container
+    String datadir
     # String outdir
     # String out_file = outdir + "/" + prefix + ".bbdukEnds.out.fq.gz"
   }
@@ -201,6 +212,7 @@ task bbdukEnds{
 
   runtime{
      docker: container
+     data_dir: datadir
      continueOnReturnCode: true
   }
 }
@@ -212,6 +224,7 @@ task bbdukReads{
     String prefix
     String out_file = prefix + ".filtered.fq.gz"
     String container
+    String datadir
     # String outdir
     # String out_file = outdir + "/" + prefix + ".filtered.fq.gz"
     
@@ -237,6 +250,7 @@ task bbdukReads{
 
   runtime{
      docker: container
+     data_dir: datadir
      continueOnReturnCode: true
   }
 }

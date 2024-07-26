@@ -1,13 +1,6 @@
-[
 {
     "rqcfilter.input_files": ["/mnt/home/ernakovich/heh1030/Software/ReadsQC/test/Ecoli_10x.1.fastq.gz", "/mnt/home/ernakovich/heh1030/Software/ReadsQC/test/Ecoli_10x.2.fastq.gz"],
     "rqcfilter.proj":"nmdc:test_method",
     "rqcfilter.shortRead": true
-},
-{
-    "rqcfilter.input_files": ["/mnt/home/ernakovich/heh1030/Software/ReadsQC/test/BMI_HFWLLBGX7_Plate61WellF10_R1.fastq.gz", "/mnt/home/ernakovich/heh1030/Software/ReadsQC/test/BMI_HFWLLBGX7_Plate61WellF10_R2.fastq.gz"],
-    "rqcfilter.proj":"nmdc:test_method",
-    "rqcfilter.shortRead": true
 }
-]
 

@@ -86,3 +86,4 @@ mkdir -p $outdir
 
 java -Dconfig.file=singularity.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m ${outdir}/${sample_name}_metadata_out.json -i ${current_file} rqcfilter.wdl
 
+rm json_list

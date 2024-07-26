@@ -56,7 +56,7 @@ One of the most popular kinds of container software is Docker. All of the necess
 
 For Ernakovich lab users, I have installed the singularity containers in our shared directory. Therefore, all you need to do is create "symlinks" (symbolic links - this is kind of analogous to a shortcut on your desktop machine) that link to the Singularity containers in `/mnt/home/ernakocvich/shared/SingularityImages` 
 
-Otherwise you can create a symlink to the singularity directory; note that the image names need to include the numbers and colons so that they match the names of the containers in the .wdl files exactly:
+Create a symlink to the singularity directory. 
 
 ```bash
 cd ReadsQC
@@ -64,7 +64,7 @@ ln -s /mnt/home/ernakovich/shared/software/SingularityImages microbiomedata
 ln -s /mnt/home/ernakovich/shared/software/SingularityImages bfoster1
 ```
 
-If you are not on premise or in the Ernakovich lab, you'll need to install the images in your own directory
+If you are not on premise or in the Ernakovich lab, you'll need to install the images in your own directory before creating the symlinks above (replace the ernakovich path with the path to the location of your own SingularityImages folder). Note that the image names need to include the numbers and colons so that they match the names of the containers in the .wdl files exactly, which is why we change their names:
 ```bash
 module load singularity
 cd ReadsQC
@@ -100,8 +100,24 @@ However if you are not working on premise and need to install it yourself, follo
 	tar xvzf RQCFilterData.tgz -C refdata
 	rm RQCFilterData.tgz
 ```
+## Setup (part 2) - Creating your input files
+Section to include:
+- [] json setup
+- [] dealing with multiple json files
+- [] other kinds of inputs
 
-## Running Workflow in Cromwell
+## Run workflow (part 3) - Launching single and multiple jobs
+Section to include:
+- [] how to launch both array and single jobs
+- [] the basic steps of the workflow (refer to nmdc; particularly important to define rqcfilter options)
+
+## After running workflow (part 4) - 
+- [] Interpret the output (where aremy files!)
+- [] modifying the workflow
+- [] dealing with failed samples
+
+## Other information
+### Running Workflow in Cromwell
 
 Description of the files:
  - `.wdl` file: the WDL file for workflow definition
@@ -109,37 +125,10 @@ Description of the files:
  - `.conf` file: the conf file for running Cromwell.
  - `.sh` file: the shell script for running the example workflow
 
-## Installing singularity images on premise
-If you need to install the images in your own directory
-
-```bash
-module load singularity
-cd ReadsQC
-mkdir SingularityImages
-cd SingularityImages
-singularity pull img-omics docker://bfoster1/img-omics:0.1.1
-singularity pull pbmarkdup docker://microbiomedata/pbmarkdup:1.0
-singularity pull bbtools docker://microbiomedata/bbtools
-```
-
-Otherwise you can create a symlink to the singularity directory; note that the image names need to include the numbers and colons so that they match the names of the containers in the .wdl files exactly
-```
-cd ReadsQC
-ln -s <full/path/to/directory/containing/bbtools/and/pbmarkdup/images> microbiomedata
-ln -s <full/path/to/directory/containing/img-omics/images> bfoster1
-
-
-need to insert directions here
-```
-## The Docker image and Dockerfile can be found here
-
+### The Docker images and Dockerfile can be found here
 [microbiomedata/bbtools:38.92](https://hub.docker.com/r/microbiomedata/bbtools)
 
-
-
-
-
-## Input files
+### Input files
 
 1. database path, 
 2. fastq (illumina paired-end interleaved fastq), 
@@ -157,7 +146,7 @@ need to insert directions here
 }
 ```
 
-## Output files
+### Output files
 
 The output will have one directory named by prefix of the fastq input file and a bunch of output files, including statistical numbers, status log and a shell script to reproduce the steps etc. 
 
@@ -175,7 +164,7 @@ The main QC fastq output is named by prefix.anqdpht.fast.gz.
 |-- ...
 ```
 
-## List of changes made for adapting to Premise:
+### List of changes made for adapting to Premise:
 - [x] changed the database location in *.wdl files to the premise shared database location (`/mnt/home/hcgs/shared/databases/readsqc/refdata`) 
 - [ ] modified the `input.json` file to use the E.coli reads in the `test/` directory.
 - [ ] extensive modifications to shifter.conf (soon to be renamed singularity.conf)

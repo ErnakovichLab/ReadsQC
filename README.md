@@ -321,9 +321,9 @@ task <Task name> {
 
 At its most basic, the top of the script is the *workflow* which is composed of *tasks*, the bottom of the script defines each *task* by specifying the comand that is run happen and softaware which is run within each task. Inputs and outputs are handled for each task and the workflow as a whole. (Runtime attributes specify the amount of resources and singularity containers that are called when a task is run). This structure (a big-picture outline followed by detailed tasks or functions) is a really common way for programmers to organize scripts. It makes it easy to understand complex programs and find what you parts you need to modify. Think of it like a book. First you ouline the structure of the book in the table of contents and then each chapter and all of its details follow. 
 
-**Exercise for consideration: ** Try drawing out the shortReads.wdl script based on the `workflow` part of the script. Use boxes and arrows to show what happens.
+**Exercise for consideration:** Try drawing out the shortReads.wdl script based on the `workflow` part of the script. Use boxes and arrows to show what happens.
 
-** Answer:**
+**Answer:**
 
 ![Image of the shortReads pipeline](images/shortReads_workflow.png)
 

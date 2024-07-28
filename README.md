@@ -325,7 +325,7 @@ At its most basic, the top of the script is the *workflow* which is composed of 
 
 ** Answer:**
 
-![Alt text](../images/shortReads_workflow.png)
+![Image of the shortReads pipeline](images/shortReads_workflow.png)
 
 Now that we understand the overview of the script, let's scroll down and focus on editing the call to the bbtools function `rqcfilter2.sh`:
 

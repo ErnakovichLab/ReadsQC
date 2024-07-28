@@ -52,10 +52,12 @@ wget https://github.com/broadinstitute/cromwell/releases/download/87/cromwell-87
 (Note currently we don't actually run cromwell from this environment directly, we mostly just rely on it for the java. This is because I have no idea where the cromwell jar file is in the depths of the conda environment...)
 
 #### Installing singularity images on premise
+##### Some background about singularity and containers
 One of the reasons this workflow is so portable is that it relies on the use of containers for its software needs. Often one of the most challenging parts of implementing a repeatable bioinformatics workflow is installing the software. Too often, software from one step conflicts with software from a downstream step, or the workflow works on one operating system but not all. In the past these difficulties could be prohibitive to replication of a workflow, the use of containers helps solve that problem. Containers essentially spoof a program into thinking it is running on the kind computer/operating system they need to run with all the dependencies the need to run correctly.
 
 One of the most popular kinds of container software is Docker. All of the necessary programs to run this workflow have been saved as Docker containers by the folks at NMDC. However most HPC systems (like premise) don't use Docker since it requries each user to have administrator level access to use effectively. Instead, many HPC systems prefer to use [Singularity](https://docs.sylabs.io/guides/3.0/user-guide/quick_start.html) which is safter to use and can seamlessly import Docker containers.
 
+##### Preparing and installing singularity containers
 For Ernakovich lab users, I have installed the singularity containers in our shared directory. Therefore, all you need to do is create "symlinks" (symbolic links - this is kind of analogous to a shortcut on your desktop machine) that link to the Singularity containers in `/mnt/home/ernakocvich/shared/SingularityImages` 
 
 Create a symlink to the singularity directory. 
@@ -103,10 +105,41 @@ However if you are not working on premise and need to install it yourself, follo
 	rm RQCFilterData.tgz
 ```
 ## Setup (part 2) - Creating your input files
-Section to include:
-- [] json setup
-- [] dealing with multiple json files
-- [] other kinds of inputs
+### Prepare Json files
+Cromwell and WDL workflows expect in put formated in Json (Javascript object notation) format. JSON format is a compact way of storing information. It typically involves lists of bracketed category-value pairs, separated by colons. The ReadsQC pipeline requires the following format of json for each read-pair it processes:
+
+1. database path, 
+2. fastq (illumina paired-end interleaved fastq), or two paired end fastq files (can be gzipped). 
+3. project name (arbitrary name, used for naming output files)
+4. ~~resource where run the workflow~~ (this is not used on the premise implementation and can be removed)
+5. informed_by 
+
+```
+{
+    "nmdc_rqcfilter.database": "/global/cfs/projectdirs/m3408/aim2/database", 
+    "nmdc_rqcfilter.input_files": "/global/cfs/cdirs/m3408/ficus/8434.3.102077.AGTTCC.fastq.gz", 
+    "nmdc_rqcfilter.proj":"nmdc:xxxxxxx",
+    "nmdc_rqcfilter.resouce":"NERSC -- perlmutter",
+    "nmdc_rqcfilter.informed_by": "nmdc:xxxxxxxx"
+}
+```
+
+You must create one of these files for each of the samples you want to process. Since this can be quite tedious to do by hand, I have created a script that can be used to create json files if given a directory of reads. 
+
+[https://github.com/hhollandmoritz/PrepareNMDCJSONs/tree/main]()
+
+Download the script
+```
+wget https://github.com/hhollandmoritz/PrepareNMDCJSONs/archive/refs/heads/main.zip
+unzip main.zip
+cd PrepareNMDCJSONs-main
+```
+
+To use the `fastq_to_json.py` script:
+```
+python fastq_to_json.py -i <full/path/to/directory/with/reads> -o <full/path/to/my_proj_jsons> -f "R1" -r "R2" -p MyProjectName -s True
+```
+This will create a directory called `my_proj_jsons` that contains a json input file for each read pair in the directory you point it to.
 
 ## Run workflow (part 3) - Launching single and multiple jobs
 Section to include:

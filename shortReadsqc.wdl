@@ -120,14 +120,22 @@ task stage_interleave {
            ln -s ~{input_fastq2} ~{target_reads_2} || cp ~{input_fastq2} ~{target_reads_2}
        fi
 
-       #echo "TESTING"
-       #zcat ~{target_reads_1} | head
-       reformat.sh -Xmx~{memory} in1=~{target_reads_1} in2=~{target_reads_2} out=~{output_interleaved}
        # Capture the start time
        date --iso-8601=seconds > start.txt
        
        # Validate that the read1 and read2 files are sorted correct to interleave
-       reformat.sh -Xmx~{memory} verifypaired=t in=~{output_interleaved}
+       reformat.sh -Xmx~{memory} verifypaired=t in1=~{target_reads_1} in2=~{target_reads_2} &> repair_needed.txt
+       
+      
+       # if the pairs are not formamtted correctly, run a repair; and try again. 
+       if grep -q "Names do not appear to be correctly paired" repair_neaded.txt; then
+           repair.sh -Xmx~{memory} in1=~{target_reads_1} in2=~{target_reads_2} out=~{output_interleaved} outs=singletons.fastq.gz
+
+       else
+           # If reads are correctly paired, interleave as usual 
+           reformat.sh -Xmx~{memory} in1=~{target_reads_1} in2=~{target_reads_2} out=~{output_interleaved}
+       fi
+
 
    >>>
 

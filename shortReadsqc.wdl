@@ -105,13 +105,14 @@ task stage_interleave {
     String target_reads_1="raw_reads_1.fastq.gz"
     String target_reads_2="raw_reads_2.fastq.gz"
     String output_interleaved="raw_interleaved.fastq.gz"
+    #string? output_singletons="singletons.fastq.gz"
     String input_fastq1
     String input_fastq2
     String datadir
    }
-
    command <<<
-       set -oeu pipefail
+       # See below for pipefail explanation
+       #set -oeu pipefail
        if [ $( echo ~{input_fastq1} | egrep -c "https*:") -gt 0 ] ; then
            wget ~{input_fastq1} -O ~{target_reads_1}
            wget ~{input_fastq2} -O ~{target_reads_2}
@@ -125,19 +126,23 @@ task stage_interleave {
        
        # Validate that the read1 and read2 files are sorted correct to interleave
        reformat.sh -Xmx~{memory} verifypaired=t in1=~{target_reads_1} in2=~{target_reads_2} &> repair_needed.txt
-       
-      
+       #echo "Names do not appear to be correctly paired" > repair_needed.txt
+       # THis is not a great solution, but we're disabling pipefail above and moving it here because the verify paired command
+       # will always exit with an error if it finds unmatched reads. Since this script fixes those, we'll revert
+       # to default error behavior. This is not ideal because it means if there are nay errors on other parts of the
+       # code they'll be undetectable, but it will help solve the neon metag problem. However if we diable pipefail entirely,
+       # it throws off the error handling of the workflow. So it must be declared somewhere. 
+       set -oeu pipefail
+
        # if the pairs are not formamtted correctly, run a repair; and try again. 
-       if grep -q "Names do not appear to be correctly paired" repair_neaded.txt; then
-           repair.sh -Xmx~{memory} in1=~{target_reads_1} in2=~{target_reads_2} out=~{output_interleaved} outs=singletons.fastq.gz
+       if grep -q "Names do not appear to be correctly paired" repair_needed.txt; then
+           repair.sh -Xmx~{memory} in1=~{target_reads_1} in2=~{target_reads_2} out=~{output_interleaved}
 
        else
            # If reads are correctly paired, interleave as usual 
            reformat.sh -Xmx~{memory} in1=~{target_reads_1} in2=~{target_reads_2} out=~{output_interleaved}
        fi
-
-
-   >>>
+    >>>
 
    output{
       File reads_fastq = "~{output_interleaved}"

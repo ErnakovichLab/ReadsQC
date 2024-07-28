@@ -55,7 +55,8 @@
 
 
 # Array setup
-#SBATCH --array=0-2:1
+# run 140 jobs, 5 at a time
+#SBATCH --array=0-140%5
 
 
 ## Load the appropriate modules first.  Linuxbrew/colsa contains most

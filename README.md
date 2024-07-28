@@ -276,7 +276,6 @@ Finally we have the list of outputs from the pipeline. If all goes well a number
         File? filtered_stats3_final_lrqc = LongReadsQC.filtered_stats3
         File? rqc_info_lrqc = LongReadsQC.rqc_info
     }
-}
 ```
 
 ### Changing the workflow

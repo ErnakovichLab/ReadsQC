@@ -165,12 +165,10 @@ Open `submit.sh` for editing using `nano` or your favorite text editor for the t
 cd ReadsQC
 nano submit.sh
 ```
+
 Scroll down. After the slurm settings (lines starting with `#SBATCH`), you'll see the call to load the environment:
 
-```
-
-```
-
+```bash
 ## Load the appropriate modules first.  Linuxbrew/colsa contains most
 ## programs, though some are contained within the anaconda/colsa
 ## module.  Refer to http://premise.sr.unh.edu for more info.
@@ -188,7 +186,7 @@ Next, move to the bottom of the script and edit the cromwell submission line.
  * change the name of the metadat_out.json file to be more descriptive. In the testing phase, I like to name it with "small", "medium", or "large" depending on which read set I'm testing.
  *  replace `input.json` with the path to the input.json file you created in the previous step. Since you're testing three different sets of reads, this fill will be different for each read set you test. 
 
-```
+```bash
 java -Dconfig.file=singularity.conf -jar /path/to/your/jar/file/cromwell/cromwell-##.jar run -m metadata_out.json -i input.json rqcfilter.wdl
 ```
 
@@ -196,7 +194,7 @@ After making the edits, you can save and exit out of nano (`ctrl + O`, `ctrl + X
 
 Finally, submit your script to slurm:
 
-```
+```bash
 sbatch submit.sh
 ```
 

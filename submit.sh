@@ -24,8 +24,10 @@
 ## If your program will be using less than 24 threads, or you
 ## require more than 24 threads, set cpus-per-task to the 
 ## desired threadcount.  Leave this commented out for the
-## default 24 threads.
-##SBATCH --cpus-per-task=62
+## default 24 threads. 
+
+# The most we specify in the wdl files is 16 threads. 
+#SBATCH --cpus-per-task=16
 
 ## You will need to specify a minimum amount of memory in the
 ## following situaitons:
@@ -37,7 +39,10 @@
 ##      a single thread would be given about 5GB of RAM.  If you
 ##      require more, please specify it as a "--mem=XXXX" option,
 ##      but avoid using all available RAM so others may share the node.
-#SBATCH --mem=512000
+
+# We comment this out because at most we specify 70GB of RAM, far lower than the 
+# 5GB x16 threads we'll be given
+##SBATCH --mem=512000
 
 ## Normally jobs will restart automatically if the cluster experiences
 ## an unforeseen issue.  This may not be desired if you want to retain
@@ -69,5 +74,5 @@ module load singularity
 
 
 #java -Dconfig.file=shifter.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m metadata_out.json -i input.json rqcfilter.wdl
-java -Dconfig.file=singularity.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -m metadata_out.json -i input.json rqcfilter.wdl
+java -Dconfig.file=singularity.conf -jar /mnt/home/ernakovich/heh1030/Software/cromwell/cromwell-87.jar run -i ../json_inputs/BMI_HFWLLBGX7_Plate61WellF7_input.json -m metadata_out.json rqcfilter.wdl
 

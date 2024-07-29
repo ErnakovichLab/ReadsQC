@@ -200,6 +200,25 @@ sbatch submit.sh
 
 Now repeat the editing process for your other two sets of test samples.
 
+#### Checking the resources used
+After the jobs have run, you can check the number of resources they used with this slurm command:
+```
+sacct -u $USER --format=JobID,JobName,MaxRSS,Elapsed
+```
+
+```
+       JobID    JobName     MaxRSS    Elapsed 
+------------ ---------- ---------- ---------- 
+493191       test_crom+              00:20:37 
+493191.batch      batch    943508K   00:20:38 
+493192       test_crom+              00:18:57 
+493192.batch      batch    462720K   00:18:57 
+493193       test_crom+              00:26:33 
+493193.batch      batch   1093908K   00:26:33 
+```
+Each slurm job id has two lines. A ".batch" line and a line with the job name. The "Elapsed" column tells you how long each job took to run (DD-HH:MM:SS). The "MaxRSS" column tells you how much memory it took at it's maximum memory usage (the number is in KB so you'll have to convert it to GB or MB depending on what you want to know). Together the three jobs should give you a sense for how much time and memory you might expect your job to take.
+
+
 ### Running an array job to run all samples through the same pipeline.
  * similar process as before, except, need to specify the location of the json file output directory.
  * Also need to edit how many samples are run at once in the `#SBATCH --array` option.
